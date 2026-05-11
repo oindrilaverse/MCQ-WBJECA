@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WBJECA 2026 — Complete MCQ Prep Portal</title>
+<!-- FIX 1: Replaced Clash Display + Satoshi (not on Google Fonts free CDN)
+     with Fraunces (display) + Plus Jakarta Sans (body) + JetBrains Mono (code) -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════ */
+:root {
+  --bg:       #060910;
+  --bg2:      #0b0f1a;
+  --surface:  #101520;
+  --card:     #141926;
+  --border:   #1c2338;
+  --border2:  #283050;
+
+  --ink:      #dde5f8;
+  --ink2:     #7a8aac;
+  --ink3:     #404e70;
+
+  --blue:     #4f8eff;
+  --indigo:   #7c6fff;
+  --cyan:     #00d4ff;
+  --green:    #00e5a0;
+  --amber:    #ffb830;
+  --rose:     #ff5f7e;
+  --violet:   #c47cff;
+  --teal:     #00cfb4;
+  --orange:   #ff7c45;
+  --lime:     #a8ff3e;
+
+  --correct:  #00e5a0;
+  --wrong:    #ff5f7e;
+
+  --display: 'Fraunces', Georgia, serif;
+  --body:    'Plus Jakarta Sans', system-ui, sans-serif;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
+
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+/* Grid background pattern */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.3;
+}
+
+/* ══════════════════════════════════════════
+   TOP NAVBAR
+══════════════════════════════════════════ */
+#top-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: 58px;
+  background: rgba(6,9,16,0.92);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 20px; gap: 0;
+}
+
+.nav-logo {
+  font-family: var(--display);
+  font-size: 17px; font-weight: 700;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-right: 24px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: -0.3px;
+}
+
+.nav-links {
+  display: flex; gap: 2px;
+  flex: 1; overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-links::-webkit-scrollbar { display: none; }
+
+.nav-link {
+  font-family: var(--mono);
+  font-size: 11px; color: var(--ink2);
+  padding: 6px 11px; border-radius: var(--r-sm);
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.18s;
+  border: 1px solid transparent;
+  flex-shrink: 0;
+}
+.nav-link:hover { color: var(--ink); background: rgba(255,255,255,0.05); }
+.nav-link.active {
+  color: var(--blue);
+  border-color: rgba(79,142,255,0.35);
+  background: rgba(79,142,255,0.1);
+}
+
+/* ══════════════════════════════════════════
+   PAGE SHELL
+══════════════════════════════════════════ */
+.page {
+  display: none;
+  padding-top: 58px;
+  min-height: 100vh;
+  position: relative; z-index: 1;
+}
+.page.active { display: block; }
+
+/* ══════════════════════════════════════════
+   HOME PAGE
+══════════════════════════════════════════ */
+#page-home {
+  background: radial-gradient(ellipse 70% 45% at 50% 0%,
+    rgba(79,142,255,0.14) 0%, transparent 70%);
+}
+
+.hero {
+  text-align: center;
+  padding: 72px 24px 52px;
+}
+
+.hero-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--blue);
+  background: rgba(79,142,255,0.1);
+  border: 1px solid rgba(79,142,255,0.28);
+  padding: 6px 18px; border-radius: 100px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.5s ease both;
+}
+.hero-pill-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--blue);
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+.hero h1 {
+  font-family: var(--display);
+  font-size: clamp(40px, 8vw, 96px);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -3px;
+  margin-bottom: 24px;
+  animation: fadeUp 0.5s 0.08s ease both;
+}
+.h1-plain { display: block; color: var(--ink); }
+.h1-grad {
+  display: block;
+  background: linear-gradient(120deg, var(--blue), var(--cyan) 55%, var(--indigo));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 16px; color: var(--ink2);
+  max-width: 520px; margin: 0 auto 44px;
+  line-height: 1.75;
+  animation: fadeUp 0.5s 0.16s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stats strip */
+.stats-strip {
+  display: flex; justify-content: center;
+  max-width: 640px; margin: 0 auto 60px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+  animation: fadeUp 0.5s 0.24s ease both;
+}
+.stat-cell {
+  flex: 1; padding: 22px 16px; text-align: center;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+.stat-cell:last-child { border-right: none; }
+.stat-val {
+  font-family: var(--display);
+  font-size: 30px; font-weight: 700;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-lbl {
+  font-family: var(--mono);
+  font-size: 10px; color: var(--ink3);
+  letter-spacing: 1.2px; text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* Subject grid */
+.subjects-section {
+  max-width: 1160px; margin: 0 auto;
+  padding: 0 24px 80px;
+}
+.sec-title {
+  font-family: var(--display);
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 600; margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+.sec-sub { color: var(--ink2); font-size: 14px; margin-bottom: 28px; }
+
+.subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+  gap: 14px;
+}
+
+/* FIX 3: --card-accent now defined on element via inline style so
+   ::before can read it. Added fallback in CSS. */
+.subject-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  cursor: pointer;
+  transition: transform 0.22s, border-color 0.22s, box-shadow 0.22s;
+  position: relative; overflow: hidden;
+}
+.subject-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--c-accent, var(--blue));   /* uses local CSS var with fallback */
+  opacity: 0; transition: opacity 0.22s;
+}
+.subject-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 44px rgba(0,0,0,0.45);
+}
+.subject-card:hover::before { opacity: 1; }
+
+.card-emoji { font-size: 30px; margin-bottom: 12px; line-height: 1; }
+.card-name {
+  font-family: var(--display);
+  font-size: 15px; font-weight: 600;
+  margin-bottom: 6px; color: var(--ink);
+}
+.card-desc {
+  font-size: 12px; color: var(--ink2);
+  line-height: 1.65; margin-bottom: 14px;
+}
+.card-foot {
+  display: flex; align-items: center;
+  justify-content: space-between;
+}
+.card-chip {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink2);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  padding: 3px 10px; border-radius: 100px;
+  letter-spacing: 0.5px;
+}
+.card-go {
+  font-size: 16px; color: var(--ink3);
+  transition: transform 0.18s, color 0.18s;
+}
+.subject-card:hover .card-go { transform: translateX(5px); color: var(--ink); }
+
+/* ══════════════════════════════════════════
+   ABOUT PAGE
+══════════════════════════════════════════ */
+#page-about {
+  background: radial-gradient(ellipse 55% 35% at 85% 15%,
+    rgba(124,111,255,0.09), transparent);
+}
+
+.about-wrap { max-width: 840px; margin: 0 auto; padding: 56px 24px 80px; }
+
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 44px; align-items: start; margin-bottom: 60px;
+}
+@media (max-width: 640px) { .about-grid { grid-template-columns: 1fr; } }
+
+.about-headline {
+  font-family: var(--display);
+  font-size: clamp(26px, 4vw, 42px);
+  font-weight: 700; line-height: 1.1;
+  letter-spacing: -1px; margin-bottom: 16px;
+}
+.about-headline em { font-style: italic; color: var(--cyan); }
+
+.about-body { color: var(--ink2); font-size: 14px; line-height: 1.85; }
+.about-body + .about-body { margin-top: 12px; }
+
+.timeline-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-xl); padding: 24px;
+}
+.timeline-card h3 {
+  font-family: var(--display);
+  font-size: 16px; margin-bottom: 18px; color: var(--cyan);
+}
+.tl { display: flex; flex-direction: column; gap: 14px; }
+.tl-row { display: flex; gap: 12px; align-items: flex-start; }
+.tl-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--blue); flex-shrink: 0; margin-top: 5px;
+}
+.tl-content { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+.tl-year {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--blue); display: block; margin-bottom: 2px;
+}
+
+.feat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px; margin-bottom: 44px;
+}
+.feat-box {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 18px;
+}
+.feat-ico { font-size: 22px; margin-bottom: 10px; }
+.feat-name {
+  font-family: var(--display);
+  font-size: 13px; font-weight: 600; margin-bottom: 5px;
+}
+.feat-text { font-size: 12px; color: var(--ink2); line-height: 1.6; }
+
+.syl-table {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+}
+.syl-row {
+  display: grid; grid-template-columns: 36px 1fr 90px;
+  gap: 14px; padding: 13px 20px;
+  border-bottom: 1px solid var(--border);
+  align-items: center; cursor: pointer;
+  transition: background 0.15s;
+}
+.syl-row:last-child { border-bottom: none; }
+.syl-row:hover { background: rgba(255,255,255,0.025); }
+.syl-n {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--ink3);
+}
+.syl-name { font-size: 14px; }
+.syl-q {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--green); text-align: right;
+}
+
+/* ══════════════════════════════════════════
+   QUIZ PAGE
+══════════════════════════════════════════ */
+#page-quiz { background: var(--bg); }
+
+.quiz-wrap {
+  max-width: 880px; margin: 0 auto;
+  padding: 28px 20px 80px;
+}
+
+.quiz-topbar {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 24px; flex-wrap: wrap;
+}
+.back-btn {
+  font-family: var(--mono); font-size: 12px;
+  color: var(--ink2);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 8px 15px; border-radius: var(--r-sm);
+  cursor: pointer; transition: all 0.18s;
+}
+.back-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+.quiz-info { flex: 1; }
+.quiz-name {
+  font-family: var(--display);
+  font-size: clamp(18px, 3vw, 26px);
+  font-weight: 700; letter-spacing: -0.5px;
+}
+.quiz-meta {
+  font-size: 12px; color: var(--ink2); margin-top: 3px;
+  font-family: var(--mono);
+}
+
+/* Topic tabs */
+.topic-bar {
+  display: flex; gap: 7px; flex-wrap: wrap;
+  padding: 14px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--r-md);
+  margin-bottom: 20px;
+}
+.t-tab {
+  font-family: var(--mono); font-size: 11px;
+  padding: 6px 13px; border-radius: var(--r-sm);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--ink2); cursor: pointer;
+  transition: all 0.18s; letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.t-tab:hover { color: var(--ink); border-color: var(--border2); }
+.t-tab.active {
+  background: rgba(79,142,255,0.14);
+  border-color: var(--blue); color: var(--blue);
+}
+
+/* Score row */
+.score-row {
+  display: flex; gap: 16px; align-items: center;
+  padding: 11px 18px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--r-md);
+  margin-bottom: 22px; flex-wrap: wrap;
+}
+.sc-pill { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink2); }
+.sc-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sc-n { font-family: var(--mono); color: var(--ink); font-weight: 500; }
+.sc-track { flex: 1; height: 4px; background: var(--border); border-radius: 2px; min-width: 80px; overflow: hidden; }
+.sc-bar {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  border-radius: 2px; transition: width 0.5s ease;
+}
+
+/* Error banner */
+.err-banner {
+  display: none;
+  background: rgba(255,95,126,0.09);
+  border: 1px solid rgba(255,95,126,0.28);
+  border-radius: var(--r-md); padding: 16px 20px;
+  color: var(--rose); font-size: 14px; margin-bottom: 18px;
+}
+.err-banner.show { display: block; }
+
+/* Generate panel */
+#gen-panel {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-xl); padding: 44px 28px;
+  text-align: center; margin-bottom: 22px;
+}
+.gen-ico { font-size: 44px; margin-bottom: 14px; line-height: 1; }
+.gen-heading {
+  font-family: var(--display);
+  font-size: 20px; font-weight: 600;
+  margin-bottom: 8px; letter-spacing: -0.3px;
+}
+.gen-detail {
+  color: var(--ink2); font-size: 14px;
+  margin-bottom: 26px; line-height: 1.75;
+  max-width: 480px; margin-left: auto; margin-right: auto;
+}
+.gen-cta {
+  background: linear-gradient(135deg, var(--blue), var(--indigo));
+  border: none; color: #fff;
+  font-family: var(--mono); font-size: 13px;
+  letter-spacing: 0.8px;
+  padding: 13px 34px; border-radius: var(--r-md);
+  cursor: pointer; transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 9px;
+}
+.gen-cta:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(79,142,255,0.35);
+}
+.gen-cta:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Loading */
+#load-panel {
+  display: none; text-align: center; padding: 40px 20px;
+}
+#load-panel.show { display: block; }
+.spinner {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 3px solid var(--border);
+  border-top-color: var(--blue);
+  animation: spin 0.75s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.load-msg { color: var(--ink2); font-size: 14px; margin-bottom: 6px; }
+.load-sub { font-family: var(--mono); font-size: 11px; color: var(--ink3); }
+
+/* Question cards */
+#q-list { display: flex; flex-direction: column; gap: 18px; }
+
+.q-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+  animation: riseIn 0.35s ease both;
+}
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.q-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 13px 18px 0; flex-wrap: wrap;
+}
+.q-num-badge {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink3);
+  background: rgba(255,255,255,0.04);
+  padding: 3px 9px; border-radius: 6px;
+}
+.q-tag {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.4px; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 6px;
+}
+.q-yr {
+  margin-left: auto;
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink3);
+  background: rgba(255,255,255,0.03);
+  padding: 3px 9px; border-radius: 6px;
+}
+
+.q-text {
+  padding: 13px 18px 11px;
+  font-size: 14.5px; line-height: 1.72; color: var(--ink);
+}
+.q-text code {
+  font-family: var(--mono); font-size: 12.5px;
+  background: rgba(255,255,255,0.07);
+  padding: 2px 6px; border-radius: 4px;
+  color: var(--cyan);
+}
+
+.opts-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 7px; padding: 0 18px 14px;
+}
+@media (max-width: 500px) { .opts-grid { grid-template-columns: 1fr; } }
+
+.opt-btn {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  color: var(--ink); font-family: var(--body);
+  font-size: 13px; padding: 10px 14px;
+  border-radius: var(--r-md); cursor: pointer;
+  text-align: left;
+  display: flex; align-items: flex-start; gap: 9px;
+  transition: all 0.16s; line-height: 1.45;
+}
+.opt-btn:hover:not(:disabled) {
+  background: rgba(79,142,255,0.1);
+  border-color: var(--blue); color: #fff;
+}
+.opt-btn:disabled { cursor: default; }
+.opt-ltr {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink3); flex-shrink: 0; padding-top: 2px;
+}
+/* Answer state classes */
+.opt-btn.is-correct {
+  background: rgba(0,229,160,0.11);
+  border-color: var(--correct); color: var(--correct);
+}
+.opt-btn.is-wrong {
+  background: rgba(255,95,126,0.11);
+  border-color: var(--wrong); color: var(--wrong);
+}
+.opt-btn.show-ans {
+  background: rgba(0,229,160,0.06);
+  border-color: rgba(0,229,160,0.3); color: var(--correct);
+}
+
+/* Explanation */
+.exp-toggle {
+  display: block; width: calc(100% - 36px);
+  margin: 0 18px 14px;
+  background: transparent;
+  border: 1px dashed var(--border);
+  color: var(--ink3);
+  font-family: var(--mono); font-size: 11px;
+  padding: 8px; border-radius: var(--r-sm);
+  cursor: pointer; transition: all 0.18s;
+  letter-spacing: 0.3px;
+}
+.exp-toggle:hover { border-color: var(--blue); color: var(--blue); }
+
+.exp-box {
+  display: none;
+  margin: 0 18px 18px;
+  background: rgba(79,142,255,0.07);
+  border: 1px solid rgba(79,142,255,0.2);
+  border-radius: var(--r-md); padding: 14px 16px;
+}
+.exp-box.open { display: block; animation: riseIn 0.22s ease; }
+.exp-label {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--blue); letter-spacing: 1.2px;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.exp-text {
+  font-size: 13px; color: #a8b4d0; line-height: 1.78;
+}
+.exp-text strong { color: var(--amber); font-weight: 600; }
+
+/* Action bar */
+.action-bar {
+  display: none; justify-content: center; gap: 10px;
+  flex-wrap: wrap; margin-top: 28px;
+}
+.action-bar.show { display: flex; }
+.act-btn {
+  font-family: var(--mono); font-size: 12px;
+  padding: 10px 22px; border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--ink2); cursor: pointer;
+  transition: all 0.18s;
+}
+.act-btn:hover { border-color: var(--border2); color: var(--ink); }
+.act-btn.primary {
+  background: rgba(79,142,255,0.12);
+  border-color: rgba(79,142,255,0.32); color: var(--blue);
+}
+.act-btn.primary:hover { background: rgba(79,142,255,0.22); }
+
+/* Bottom progress rail */
+.prog-rail {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 3px; background: rgba(255,255,255,0.04); z-index: 999;
+}
+.prog-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  transition: width 0.5s ease;
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE TWEAKS
+══════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .stats-strip { flex-wrap: wrap; }
+  .stat-cell { min-width: 45%; }
+  .nav-logo { font-size: 14px; margin-right: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════ NAVBAR ════ -->
+<nav id="top-nav">
+  <div class="nav-logo" onclick="showPage('home')">WBJECA·26</div>
+  <div class="nav-links" id="nav-links">
+    <div class="nav-link active"  data-page="home"  onclick="showPage('home')">Home</div>
+    <div class="nav-link"         data-page="about" onclick="showPage('about')">About</div>
+    <div class="nav-link" data-subj="ds"    onclick="openSubject('ds')">Data Structures</div>
+    <div class="nav-link" data-subj="c"     onclick="openSubject('c')">C Programming</div>
+    <div class="nav-link" data-subj="oop"   onclick="openSubject('oop')">OOP (C++)</div>
+    <div class="nav-link" data-subj="unix"  onclick="openSubject('unix')">Unix</div>
+    <div class="nav-link" data-subj="co"    onclick="openSubject('co')">Computers</div>
+    <div class="nav-link" data-subj="os"    onclick="openSubject('os')">OS</div>
+    <div class="nav-link" data-subj="cn"    onclick="openSubject('cn')">Networks</div>
+    <div class="nav-link" data-subj="dbms"  onclick="openSubject('dbms')">DBMS</div>
+    <div class="nav-link" data-subj="se"    onclick="openSubject('se')">Soft. Engg</div>
+    <div class="nav-link" data-subj="ml"    onclick="openSubject('ml')">ML</div>
+  </div>
+</nav>
+
+<!-- ════ HOME PAGE ════ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-pill"><div class="hero-pill-dot"></div>AI-Powered WBJECA 2026 Prep</div>
+    <h1>
+      <span class="h1-plain">Crack WBJECA</span>
+      <span class="h1-grad">2026</span>
+    </h1>
+    <p class="hero-sub">50 MCQs per topic across all 10 subjects. Based on 2022–2025 PYQ patterns with simple Class-7 explanations. Generated by AI, on demand.</p>
+    <div class="stats-strip">
+      <div class="stat-cell"><div class="stat-val">500+</div><div class="stat-lbl">MCQs</div></div>
+      <div class="stat-cell"><div class="stat-val">10</div><div class="stat-lbl">Subjects</div></div>
+      <div class="stat-cell"><div class="stat-val">55+</div><div class="stat-lbl">Topics</div></div>
+      <div class="stat-cell"><div class="stat-val">PYQ</div><div class="stat-lbl">2022–25</div></div>
+    </div>
+  </div>
+
+  <div class="subjects-section">
+    <div class="sec-title">Choose Your Subject</div>
+    <div class="sec-sub">Click any card — 50 MCQs with simple explanations will be generated instantly</div>
+    <div class="subjects-grid" id="home-grid"></div>
+  </div>
+</div>
+
+<!-- ════ ABOUT PAGE ════ -->
+<div class="page" id="page-about">
+  <div class="about-wrap">
+    <div class="about-grid">
+      <div>
+        <h2 class="about-headline">Your Complete<br><em>WBJECA 2026</em><br>Study Partner</h2>
+        <p class="about-body">This portal covers the full WBJECA syllabus — 500+ MCQs across 10 subjects — all generated using AI trained on WBJECA 2022–2025 question patterns. Every answer comes with a simple Class-7-style explanation so nothing feels out of reach.</p>
+        <p class="about-body" style="margin-top:12px">Built for final-year BCA students aiming at MCA entrance. No signup needed, works offline once loaded, and remembers your answers within a session.</p>
+      </div>
+      <div class="timeline-card">
+        <h3>WBJECA Exam Timeline</h3>
+        <div class="tl">
+          <div class="tl-row"><div class="tl-dot"></div><div class="tl-content"><span class="tl-year">2022</span>Pattern set — 100 MCQs, 2 hours, pen-paper</div></div>
+          <div class="tl-row"><div class="tl-dot"></div><div class="tl-content"><span class="tl-year">2023</span>Data Structures & OS questions increased</div></div>
+          <div class="tl-row"><div class="tl-dot"></div><div class="tl-content"><span class="tl-year">2024</span>Networks, DBMS, and C++ weightage up</div></div>
+          <div class="tl-row"><div class="tl-dot"></div><div class="tl-content"><span class="tl-year">2025</span>ML/AI topics formally added to syllabus</div></div>
+          <div class="tl-row"><div class="tl-dot" style="background:var(--cyan)"></div><div class="tl-content"><span class="tl-year" style="color:var(--cyan)">2026 ★</span>This portal prepares you for it!</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-title" style="margin-bottom:20px">Why Use This Portal?</div>
+    <div class="feat-grid">
+      <div class="feat-box"><div class="feat-ico">🤖</div><div class="feat-name">AI-Generated MCQs</div><div class="feat-text">50 questions per topic, pattern-matched to real WBJECA papers from 2022–2025.</div></div>
+      <div class="feat-box"><div class="feat-ico">📖</div><div class="feat-name">Class-7 Explanations</div><div class="feat-text">Every answer explained simply — no heavy jargon, just clear logic you can remember.</div></div>
+      <div class="feat-box"><div class="feat-ico">🎯</div><div class="feat-name">PYQ-Based Topics</div><div class="feat-text">Topics weighted by how frequently they've appeared in past WBJECA exams.</div></div>
+      <div class="feat-box"><div class="feat-ico">📊</div><div class="feat-name">Live Score Tracking</div><div class="feat-text">Correct, wrong, and attempted counts update in real-time as you answer.</div></div>
+      <div class="feat-box"><div class="feat-ico">🔍</div><div class="feat-name">Topic Filters</div><div class="feat-text">Filter questions by sub-topic to drill exactly what you need most.</div></div>
+      <div class="feat-box"><div class="feat-ico">💾</div><div class="feat-name">Session Cache</div><div class="feat-text">Once generated, questions stay available all session — no re-generating needed.</div></div>
+    </div>
+
+    <div class="sec-title" style="margin-bottom:18px; margin-top:44px">Complete Syllabus</div>
+    <div class="syl-table" id="syl-table"></div>
+  </div>
+</div>
+
+<!-- ════ QUIZ PAGE ════ -->
+<div class="page" id="page-quiz">
+  <div class="quiz-wrap">
+
+    <div class="quiz-topbar">
+      <button class="back-btn" onclick="showPage('home')">← Back</button>
+      <div class="quiz-info">
+        <div class="quiz-name" id="quiz-title">Subject</div>
+        <div class="quiz-meta" id="quiz-meta">50 MCQs · WBJECA 2022–2025 PYQ Based</div>
+      </div>
+    </div>
+
+    <div class="topic-bar" id="topic-bar"></div>
+
+    <div class="score-row">
+      <div class="sc-pill">
+        <div class="sc-dot" style="background:var(--correct)"></div>
+        Correct: <span class="sc-n" id="sc-ok">0</span>
+      </div>
+      <div class="sc-pill">
+        <div class="sc-dot" style="background:var(--wrong)"></div>
+        Wrong: <span class="sc-n" id="sc-bad">0</span>
+      </div>
+      <div class="sc-pill">
+        Attempted: <span class="sc-n" id="sc-done">0</span>&nbsp;/&nbsp;<span id="sc-of">50</span>
+      </div>
+      <div class="sc-track"><div class="sc-bar" id="sc-bar"></div></div>
+    </div>
+
+    <div class="err-banner" id="err-banner">
+      ⚠ <span id="err-msg">Something went wrong.</span>
+      &nbsp;Please check your connection and try again.
+    </div>
+
+    <!-- Generate panel -->
+    <div id="gen-panel">
+      <div class="gen-ico" id="gen-ico">📚</div>
+      <div class="gen-heading" id="gen-heading">Ready to Practice?</div>
+      <div class="gen-detail" id="gen-detail">Click below to generate 50 WBJECA-pattern MCQs for this subject — with simple Class-7 explanations for every answer.</div>
+      <button class="gen-cta" id="gen-cta" onclick="generateQuestions()">
+        ⚡ Generate 50 MCQs
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="load-panel">
+      <div class="spinner"></div>
+      <div class="load-msg">Generating WBJECA-pattern questions…</div>
+      <div class="load-sub" id="load-sub">Analysing PYQ patterns from 2022–2025</div>
+    </div>
+
+    <!-- Questions -->
+    <div id="q-list"></div>
+
+    <div class="action-bar" id="action-bar">
+      <button class="act-btn" onclick="resetAnswers()">↺ Reset Answers</button>
+      <button class="act-btn primary" onclick="generateQuestions()">⚡ Regenerate MCQs</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bottom progress rail -->
+<div class="prog-rail"><div class="prog-fill" id="prog-fill"></div></div>
+
+<script>
+/* ════════════════════════════════════════════════════
+   SUBJECT DATA
+════════════════════════════════════════════════════ */
+const SUBJECTS = {
+  ds: {
+    name: 'Data Structures', icon: '🌲', accent: '#00e5a0',
+    desc: 'Searching, Sorting, Stack, Queue, Linked List, Tree, Graph',
+    topics: ['Searching','Sorting','Stack','Queue','Linked List','Tree','Graph'],
+    prompt: 'Generate 50 WBJECA MCQs on Data Structures covering: Searching (Linear Search O(n), Binary Search O(log n), Hashing, collision), Sorting (Bubble/Selection/Insertion/Merge/Quick/Heap/Radix — time complexities and stability), Stack (LIFO, push/pop/peek, postfix/prefix conversion, recursion, applications), Queue (FIFO, circular queue formula, deque, priority queue, BFS), Linked List (singly/doubly/circular, insertion/deletion, traversal), Tree (Binary Tree, BST property, AVL balance factor, heap, tree traversals: inorder/preorder/postorder), Graph (BFS uses queue, DFS uses stack, shortest path, topological sort on DAG, adjacency matrix/list).'
+  },
+  c: {
+    name: 'C Programming', icon: '⚙️', accent: '#4f8eff',
+    desc: 'Variables, I/O, Operators, Control Flow, Functions, Arrays, Pointers, Strings, Structures, Files, Preprocessor',
+    topics: ['Variables & Data Types','I/O Operations','Operators','Control Flow','Functions','Arrays','Pointers','Strings','Structures & Unions','File Handling','Preprocessor','Command Line Args'],
+    prompt: 'Generate 50 WBJECA MCQs on C Programming covering: Data types (int/float/double/char, sizeof, range), Format specifiers (%d/%f/%c/%s), Operators (precedence, bitwise AND/OR/XOR/shift, ternary), Control flow (if/else/switch/for/while/do-while/break/continue/goto), Functions (call by value vs reference, recursion, storage classes), Arrays (1D/2D declaration, passing to functions, out-of-bounds), Pointers (declaration, arithmetic, NULL, pointer to pointer, function pointers), Strings (strlen/strcpy/strcmp/strcat/strrev), Structures and Unions (size differences, typedef, bit fields, nested), File Handling (fopen modes: r/w/a/rb/wb, fclose/fread/fwrite/fseek/ftell/rewind/feof), Preprocessor (#define macros, #include, #ifdef/#ifndef/#endif, #undef), Command Line Arguments (int argc, char *argv[], accessing arguments).'
+  },
+  oop: {
+    name: 'Object Oriented Programming (C++)', icon: '🔷', accent: '#7c6fff',
+    desc: 'Classes, Constructors, Inheritance, Polymorphism, Templates, Overloading',
+    topics: ['Classes & Objects','Constructors','Operator Overloading','Inheritance','Polymorphism','Templates','Friends & Namespaces','Miscellaneous C++'],
+    prompt: 'Generate 50 WBJECA MCQs on C++ OOP covering: Classes and Objects (access specifiers: public/private/protected, member functions), Constructors (default, parameterized, copy constructor, destructor, member initializer list), Static Members (shared across objects, accessed with class name), Const member functions (cannot modify object), Operator Overloading (which operators can/cannot be overloaded, friend functions for overloading), this pointer (implicit pointer to current object), Inheritance (types: single/multiple/multilevel/hierarchical/hybrid, access specifiers in derived class, virtual base class, constructor call order), Polymorphism (function overloading, virtual functions, pure virtual functions, abstract class, vtable), Templates (function templates, class templates, template specialization), Friend Functions and Friend Classes, Namespaces (using namespace std), Enums, Unions, typedef/using, Scope of variables.'
+  },
+  unix: {
+    name: 'Unix / Linux', icon: '🐧', accent: '#ffb830',
+    desc: 'Commands with options, Shell scripting, vi editor, Wildcards',
+    topics: ['File Commands','Process Commands','Text Processing','Permissions','Shell Scripting','vi Editor','Wildcards & Paths'],
+    prompt: 'Generate 50 WBJECA MCQs on Unix/Linux covering: File commands (ls -l/-a/-R, mv, cp -r, touch, cat, ln -s for soft link vs hard link, du -h/-s), Process commands (ps -aux, kill -9/-15, top, nice -n, renice, sleep), Text processing (sort -r/-n/-k/-u, diff, wc -l/-w/-c, cut -d -f, paste, grep -i/-v/-n/-r/-c, comm), File info (file, whereis, which, find -name/-type/-mtime), Permissions (chmod numeric 755/644 and symbolic u+x, chown user:group, chgrp), Environment (echo, env, PATH variable, CLASSPATH), Shell scripting (variables, if/else/elif, for/while loops, functions, read, exit codes, shebang #!/bin/bash), vi editor (modes: command/insert/visual, :w/:q/:wq/:q!, dd/yy/p/G/gg, /search, :n), Wildcards (* ? [ ]), bc (calculator), cal, time, pwd.'
+  },
+  co: {
+    name: 'Introduction to Computers', icon: '💻', accent: '#00d4ff',
+    desc: 'Bus structure, I/O, Interrupts, DMA, RAM, ROM, Pipeline, System Calls',
+    topics: ['Bus Structure','I/O Mechanisms','Interrupts','DMA','Memory Types','Pipeline','System Calls'],
+    prompt: 'Generate 50 WBJECA MCQs on Computer Organisation / Intro to Computers covering: Bus structure (data bus width = word size, address bus width = addressable memory, control bus signals, bus arbitration), Basic I/O (programmed I/O = busy waiting, interrupt-driven I/O, memory-mapped I/O vs isolated I/O, port-mapped I/O), Subroutines (CALL/RET instructions, stack frame, parameter passing by value/reference, stack pointer), Interrupt (hardware vs software interrupts, maskable vs non-maskable, ISR, interrupt vector table, priority levels, polling vs interrupt), DMA (direct memory access — CPU not involved, DMA controller, modes: burst/cycle-stealing/transparent, improves I/O speed), RAM types (SRAM is faster/costlier, DRAM needs refresh, SDRAM synchronous, DRAM used as main memory), ROM types (PROM once-programmable, EPROM UV-erasable, EEPROM electrically-erasable, Flash is type of EEPROM), Pipeline (stages, speedup = n*k/(n+k-1), hazards: structural/data/control, branch prediction, forwarding/bypassing), System calls (types: process control/file management/device management/information maintenance/communication, trap instruction).'
+  },
+  os: {
+    name: 'Operating System', icon: '🖥️', accent: '#ff5f7e',
+    desc: 'Process, Thread, Scheduling, Deadlock, Synchronisation, Memory, Disk, Files',
+    topics: ['Process & Thread','CPU Scheduling','Deadlock','Synchronisation','Memory Management','Disk Management','File Management'],
+    prompt: 'Generate 50 WBJECA MCQs on Operating Systems covering: Process (PCB contents, process states: new/ready/running/waiting/terminated, context switch overhead), Thread (user-level vs kernel-level, advantages of multithreading, thread vs process), CPU Scheduling (FCFS — convoy effect, SJF — optimal avg waiting time, Round Robin with quantum, Priority scheduling — starvation/aging, MLFQ; calculate waiting time and turnaround time in numerical questions), Deadlock (4 necessary conditions: mutual exclusion/hold and wait/no preemption/circular wait; prevention by negating each condition; Banker\'s algorithm for avoidance; detection using resource allocation graph), Synchronisation (race condition, critical section requirements, Peterson\'s solution, mutex/lock, semaphore: binary vs counting, producer-consumer problem, monitors), Memory Management (logical vs physical address, paging: page table, page size, internal fragmentation; segmentation: external fragmentation; virtual memory: demand paging, page fault; page replacement: FIFO/LRU/Optimal — Belady\'s anomaly in FIFO; TLB for speed; thrashing), Disk Scheduling (FCFS/SSTF/SCAN/C-SCAN/LOOK — calculate head movement), File System (allocation: contiguous/linked/indexed; directory: single-level/two-level/tree-structured; file access: sequential/random/indexed; inode structure in Unix).'
+  },
+  cn: {
+    name: 'Computer Networks', icon: '🌐', accent: '#00cfb4',
+    desc: 'OSI/TCP-IP models, Routing, IP, TCP/UDP, IPv4/IPv6, Security, Protocols',
+    topics: ['Reference Models','Physical & Data Link','Routing Algorithms','IP & Subnetting','TCP & UDP','IPv4 vs IPv6','Application Protocols','Network Security'],
+    prompt: 'Generate 50 WBJECA MCQs on Computer Networks covering: OSI model (7 layers and their functions — physical/data link/network/transport/session/presentation/application), TCP/IP model (4 layers comparison with OSI), Transmission media (twisted pair — Cat5/6, coaxial, fiber optic — single/multi mode, bandwidth comparison), Data link layer (MAC address, CSMA/CD in Ethernet, CSMA/CA in WiFi, framing, error detection: CRC/checksum/parity, flow control: stop-and-wait/sliding window), Routing algorithms (Distance Vector: RIP with hop count, Bellman-Ford; Link State: OSPF, Dijkstra; BGP for inter-AS), IP addressing (IPv4 32-bit, subnetting: calculate network address/broadcast/host range, CIDR notation /24 etc., classful: A/B/C/D/E classes, private addresses: 10.x/172.16.x/192.168.x), TCP vs UDP (TCP: connection-oriented, reliable, 3-way handshake SYN/SYN-ACK/ACK, 4-way termination FIN, flow control with window size, congestion control; UDP: connectionless, fast, used for DNS/streaming), IPv4 vs IPv6 (128-bit addresses, no fragmentation at routers, no checksum in IPv6 header, autoconfiguration), Application protocols (DNS: port 53, HTTP: port 80, HTTPS: port 443, FTP: ports 20/21, SMTP: port 25, POP3: port 110, IMAP: port 143, DHCP: ports 67/68, SSH: port 22), Security (symmetric key: AES/DES; asymmetric: RSA; SSL/TLS; digital certificates; firewall types: packet filtering/stateful/proxy; VPN).'
+  },
+  dbms: {
+    name: 'Database Management System', icon: '🗄️', accent: '#c47cff',
+    desc: 'ER Diagram, Relational Algebra, SQL, Normalisation, Transactions, Indexing',
+    topics: ['Introduction','ER Diagram','Relational Algebra','SQL Queries','Normalisation','Transactions','Indexing & Query Opt'],
+    prompt: 'Generate 50 WBJECA MCQs on DBMS covering: Introduction (DBMS advantages over file system, schema vs instance, data independence: logical/physical, 3-tier architecture, data models: relational/hierarchical/network/ER), ER Diagram (entity types: strong/weak, attributes: simple/composite/multi-valued/derived, relationship types: one-to-one/one-to-many/many-to-many, participation: total/partial, ISA hierarchy), Relational Model (relation/tuple/attribute/domain/degree/cardinality, keys: super/candidate/primary/foreign/composite), Relational Algebra (select sigma with conditions, project pi, cartesian product, union/intersection/difference with compatibility, natural join vs theta join vs equijoin vs outer join: left/right/full), SQL (SELECT with WHERE/GROUP BY/HAVING/ORDER BY/DISTINCT, aggregate functions: COUNT/SUM/AVG/MIN/MAX, JOINs: INNER/LEFT/RIGHT/FULL, subqueries: correlated vs non-correlated, DDL: CREATE/ALTER/DROP; DML: INSERT/UPDATE/DELETE; DCL: GRANT/REVOKE; TCL: COMMIT/ROLLBACK/SAVEPOINT, constraints: PRIMARY KEY/FOREIGN KEY/UNIQUE/NOT NULL/CHECK/DEFAULT), Normalisation (1NF: no multivalued/composite attributes; 2NF: no partial dependency; 3NF: no transitive dependency; BCNF: every determinant is a candidate key; find FDs and decompose), Transactions (ACID: atomicity/consistency/isolation/durability, schedules, serializability, conflict serializability, two-phase locking: growing/shrinking phase, deadlock in transactions), Indexing (dense vs sparse index, primary/secondary/clustering index, B-tree vs B+ tree: all data in leaves in B+ tree, hashing: static/dynamic/extendible), Query Optimisation (cost-based vs heuristic, query tree transformation, pushing selections down).'
+  },
+  se: {
+    name: 'Software Engineering', icon: '📐', accent: '#ff7c45',
+    desc: 'Process Models, Requirements, Design, Testing, Metrics, Risk, Quality',
+    topics: ['Process Models','Requirements','System Modelling','Design','Testing','Metrics','Risk & Quality'],
+    prompt: 'Generate 50 WBJECA MCQs on Software Engineering covering: Introduction (software characteristics vs hardware, software crisis causes, software engineering definition), Process Models (Waterfall: sequential phases/disadvantages; Incremental: delivery in increments; RAD: rapid prototyping; Spiral: risk-driven/four quadrants; Agile: principles/Scrum roles:PO/SM/Team/sprints/ceremonies; XP: pair programming/TDD/refactoring; V-model: verification and validation), Requirements Engineering (functional vs non-functional requirements, SRS document IEEE 830, use case diagrams, user stories format: As a/I want/So that, requirement elicitation techniques: interview/questionnaire/observation/prototyping, requirement validation), System Models (DFD: levels 0/1/2, data flow symbols, data dictionary, state transition diagrams, ER model in design), Design Engineering (modular design: cohesion types: coincidental/logical/temporal/procedural/communicational/sequential/functional — from low to high; coupling types: content/common/control/stamp/data — from high to low; design patterns: singleton/factory/observer/MVC; software architecture styles), Testing (unit testing: white-box/statement coverage/branch coverage/path coverage/cyclomatic complexity = E-N+2P; integration testing: top-down/bottom-up/sandwich; system testing; acceptance testing: alpha/beta; regression testing; black-box testing: equivalence partitioning/boundary value analysis; V model), Metrics (LOC: lines of code; Function Points; cyclomatic complexity formula; Halstead metrics; defect density = defects/KLOC), Risk Management (risk types: project/product/business; risk probability and impact matrix; RMMM plan), Quality (SQA activities; CMM/CMMI levels: initial/managed/defined/quantitatively-managed/optimizing; ISO 9001; Six Sigma DMAIC).'
+  },
+  ml: {
+    name: 'Machine Learning', icon: '🧠', accent: '#a8ff3e',
+    desc: 'Classification, Decision Trees, ANN, SVM, Bayesian Learning, Clustering, HMM',
+    topics: ['Classification Basics','Decision Trees','Neural Networks','SVM','Bayesian Learning','Clustering','Hidden Markov Models'],
+    prompt: 'Generate 50 WBJECA MCQs on Machine Learning covering: Classification basics (supervised vs unsupervised vs reinforcement learning, training/test/validation split, k-NN algorithm: k value effect/distance metrics/lazy learner, bias-variance tradeoff: high bias=underfitting/high variance=overfitting, cross-validation, precision/recall/F1/accuracy), Decision Tree Learning (entropy = -sum(p*log2(p)), information gain = entropy(parent) - weighted entropy(children), ID3 algorithm steps, Gini impurity, pruning: pre-pruning/post-pruning, CART uses Gini, C4.5 handles continuous attributes and missing values), Artificial Neural Networks (biological neuron analogy, perceptron: single layer/linearly separable only, sigmoid activation: output 0-1, ReLU: max(0,x)/solves vanishing gradient, softmax for multiclass, feedforward pass, backpropagation: chain rule/gradient descent, learning rate effect, epochs, batch/mini-batch/stochastic gradient descent, overfitting solutions: dropout/regularization), Support Vector Machines (decision boundary = hyperplane, maximize margin between support vectors, support vectors define the hyperplane, hard margin: linearly separable, soft margin: allows misclassification with C parameter, kernel trick maps to higher dimension: linear/polynomial/RBF/sigmoid kernels, SVM is a discriminative model), Bayesian Learning (Bayes theorem: P(H|E)=P(E|H)*P(H)/P(E), prior probability, likelihood, posterior, MAP estimate, Naive Bayes: assumes feature independence, works well for text classification, Laplace smoothing for zero probability), Clustering (unsupervised, k-means algorithm: initialize centroids/assign to nearest/update centroids/repeat until convergence; choosing k: elbow method; hierarchical clustering: agglomerative bottom-up/divisive top-down; dendrograms; DBSCAN: density-based/handles noise/no predefined k; evaluating clusters: silhouette score/inertia), Hidden Markov Models (Markov property: next state depends only on current state; HMM components: states S/observations O/transition probabilities A/emission probabilities B/initial probabilities pi; 3 problems: evaluation=Forward algorithm/decoding=Viterbi algorithm/learning=Baum-Welch; applications: speech recognition/POS tagging/gesture recognition).'
+  }
+};
+
+/* ════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════ */
+let currSubj   = null;
+let currTopic  = 'all';
+let allQs      = [];       // all questions for current subject
+let answered   = {};       // qid → chosen index
+let scOk = 0, scBad = 0, scDone = 0;
+const cache    = {};       // subject key → questions array (session cache)
+
+/* ════════════════════════════════════════════════════
+   NAVIGATION HELPERS
+════════════════════════════════════════════════════ */
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  // Update nav active state
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  const target = document.querySelector(
+    name === 'home'  ? '[data-page="home"]'  :
+    name === 'about' ? '[data-page="about"]' : null
+  );
+  if (target) target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openSubject(key) {
+  currSubj  = key;
+  currTopic = 'all';
+  // FIX 4+6: reset state BEFORE updating UI
+  answered = {};
+  scOk = 0; scBad = 0; scDone = 0;
+
+  const s = SUBJECTS[key];
+
+  // Update nav highlight
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  const navEl = document.querySelector('[data-subj="' + key + '"]');
+  if (navEl) navEl.classList.add('active');
+
+  // Update quiz header
+  document.getElementById('quiz-title').textContent = s.name;
+  document.getElementById('quiz-meta').textContent =
+    s.topics.length + ' Topics · 50 MCQs · WBJECA 2022–2025 PYQ Based';
+
+  // Build topic tabs
+  const bar = document.getElementById('topic-bar');
+  bar.innerHTML = '';
+  // FIX 7: use data-topic attribute instead of inline string to avoid quoting issues
+  const allTab = document.createElement('div');
+  allTab.className = 't-tab active';
+  allTab.textContent = 'All Topics';
+  allTab.dataset.topic = 'all';
+  allTab.addEventListener('click', function(){ filterTopic('all', this); });
+  bar.appendChild(allTab);
+
+  s.topics.forEach(function(t) {
+    const tab = document.createElement('div');
+    tab.className = 't-tab';
+    tab.textContent = t;
+    tab.dataset.topic = t;
+    tab.addEventListener('click', function(){ filterTopic(t, this); });
+    bar.appendChild(tab);
+  });
+
+  // Clear previous content
+  document.getElementById('q-list').innerHTML = '';
+  document.getElementById('err-banner').classList.remove('show');
+  document.getElementById('action-bar').classList.remove('show');
+  document.getElementById('load-panel').classList.remove('show');
+
+  // Update score UI with zeroed state
+  updateScoreUI(0);
+
+  if (cache[key]) {
+    // Questions already generated — show them directly
+    allQs = cache[key];
+    updateScoreUI(allQs.length);
+    renderQuestions(filterQuestions());
+    document.getElementById('gen-panel').style.display = 'none';
+    document.getElementById('action-bar').classList.add('show');
+    // FIX 6: re-enable button in case it was disabled
+    document.getElementById('gen-cta').disabled = false;
+  } else {
+    // Show generate panel
+    allQs = [];
+    document.getElementById('gen-panel').style.display = 'block';
+    document.getElementById('gen-ico').textContent      = s.icon;
+    document.getElementById('gen-heading').textContent  = 'Practice ' + s.name;
+    document.getElementById('gen-detail').textContent   =
+      'Generate 50 WBJECA-pattern MCQs on: ' + s.desc +
+      '. Each answer includes a simple Class-7-style explanation.';
+    document.getElementById('gen-cta').disabled = false;
+  }
+
+  // Switch to quiz page
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-quiz').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ════════════════════════════════════════════════════
+   GENERATE QUESTIONS — Anthropic API
+════════════════════════════════════════════════════ */
+async function generateQuestions() {
+  if (!currSubj) return;
+  const s = SUBJECTS[currSubj];
+
+  // Hide gen panel, show loader
+  document.getElementById('gen-panel').style.display   = 'none';
+  document.getElementById('err-banner').classList.remove('show');
+  document.getElementById('q-list').innerHTML          = '';
+  document.getElementById('action-bar').classList.remove('show');
+
+  const loadPanel = document.getElementById('load-panel');
+  loadPanel.classList.add('show');
+
+  // Cycling loading messages
+  const msgs = [
+    'Analysing WBJECA 2022–2025 PYQ patterns…',
+    'Crafting 50 topic-balanced questions…',
+    'Writing simple Class-7 explanations…',
+    'Formatting answer options…',
+    'Almost ready — hang tight…'
+  ];
+  let mi = 0;
+  const ticker = setInterval(function() {
+    document.getElementById('load-sub').textContent = msgs[mi % msgs.length];
+    mi++;
+  }, 2500);
+
+  // Build the full system prompt
+  const systemPrompt =
+    s.prompt +
+    '\n\nIMPORTANT: Return ONLY a raw JSON array with exactly 50 objects. ' +
+    'No markdown fences, no explanatory text before or after the array. ' +
+    'Each object must have these exact keys:\n' +
+    '  "q"     : question text (string)\n' +
+    '  "opts"  : array of exactly 4 option strings\n' +
+    '  "ans"   : integer 0-3 indicating correct option index\n' +
+    '  "topic" : sub-topic label (string)\n' +
+    '  "year"  : one of "2022","2023","2024","2025","2026*" (string)\n' +
+    '  "exp"   : 2-3 sentence explanation in simple Class-7 English; ' +
+    'wrap key terms in **double asterisks** for bold. (string)\n' +
+    'Ensure questions span all sub-topics listed, are factually correct, ' +
+    'and match WBJECA difficulty level.';
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // FIX 12: CRITICAL header required for direct browser API calls
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 8000,
+        system: systemPrompt,
+        messages: [{
+          role: 'user',
+          content: 'Generate the 50 MCQs for ' + s.name + '. Return only the JSON array, nothing else.'
+        }]
+      })
+    });
+
+    clearInterval(ticker);
+    loadPanel.classList.remove('show');
+
+    if (!resp.ok) {
+      const errData = await resp.json().catch(function(){ return {}; });
+      throw new Error('API error ' + resp.status + ': ' + (errData.error && errData.error.message || resp.statusText));
+    }
+
+    const data = await resp.json();
+    let raw = (data.content && data.content[0] && data.content[0].text) || '';
+
+    // Strip any accidental markdown code fences
+    raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
+
+    // Extract JSON array robustly
+    const start = raw.indexOf('[');
+    const end   = raw.lastIndexOf(']');
+    if (start === -1 || end === -1 || end < start) {
+      throw new Error('Response did not contain a valid JSON array. Try regenerating.');
+    }
+    raw = raw.slice(start, end + 1);
+
+    let questions;
+    try {
+      questions = JSON.parse(raw);
+    } catch (parseErr) {
+      throw new Error('Could not parse question data. Try regenerating. (' + parseErr.message + ')');
+    }
+
+    if (!Array.isArray(questions) || questions.length === 0) {
+      throw new Error('Received empty question list. Please try again.');
+    }
+
+    // Normalise each question to ensure required fields
+    questions = questions.map(function(q, i) {
+      return {
+        q:     q.q     || ('Question ' + (i + 1)),
+        opts:  Array.isArray(q.opts) ? q.opts.slice(0, 4) : ['A','B','C','D'],
+        ans:   typeof q.ans === 'number' ? Math.min(Math.max(q.ans, 0), 3) : 0,
+        topic: q.topic || s.topics[i % s.topics.length] || 'General',
+        year:  q.year  || '2024',
+        exp:   q.exp   || 'See answer above.'
+      };
+    });
+
+    // Cache and render
+    allQs        = questions;
+    cache[currSubj] = questions;
+    answered    = {};
+    scOk = 0; scBad = 0; scDone = 0;
+    updateScoreUI(allQs.length);
+    renderQuestions(filterQuestions());
+    document.getElementById('action-bar').classList.add('show');
+
+  } catch (err) {
+    clearInterval(ticker);
+    loadPanel.classList.remove('show');
+    // Show error, re-show gen panel
+    document.getElementById('gen-panel').style.display = 'block';
+    document.getElementById('gen-cta').disabled = false;
+    document.getElementById('err-banner').classList.add('show');
+    document.getElementById('err-msg').textContent = err.message || 'Unknown error occurred.';
+    console.error('[WBJECA MCQ]', err);
+  }
+}
+
+/* ════════════════════════════════════════════════════
+   FILTER & RENDER
+════════════════════════════════════════════════════ */
+function filterQuestions() {
+  if (currTopic === 'all') return allQs;
+  // FIX 11: exact match first, then partial — avoids false matches
+  const exact = allQs.filter(function(q) {
+    return q.topic && q.topic.toLowerCase() === currTopic.toLowerCase();
+  });
+  if (exact.length > 0) return exact;
+  // Fallback: partial match
+  return allQs.filter(function(q) {
+    return q.topic && q.topic.toLowerCase().indexOf(currTopic.toLowerCase()) !== -1;
+  });
+}
+
+function renderQuestions(list) {
+  const container = document.getElementById('q-list');
+  container.innerHTML = '';
+
+  if (!list || list.length === 0) {
+    container.innerHTML =
+      '<div style="text-align:center;padding:40px;color:var(--ink2);font-size:14px">' +
+      'No questions match this topic filter. Select "All Topics" to see everything.</div>';
+    return;
+  }
+
+  const s = SUBJECTS[currSubj];
+
+  list.forEach(function(q, i) {
+    // FIX: use stable index from allQs array, not list index
+    const qid = allQs.indexOf(q);
+
+    // Tag colour using subject accent
+    const accent = s.accent || '#4f8eff';
+    // Create a safe hex string for inline style (hex with alpha via opacity)
+    const tagStyle = 'background:' + accent + '22; color:' + accent + ';';
+
+    // Build option buttons
+    const optsHtml = (q.opts || []).map(function(optText, idx) {
+      let cls = '';
+      const wasAnswered = answered[qid] !== undefined;
+      if (wasAnswered) {
+        const chosen = answered[qid];
+        if (idx === q.ans && idx === chosen) cls = ' is-correct';
+        else if (idx === chosen)             cls = ' is-wrong';
+        else if (idx === q.ans)              cls = ' show-ans';
+      }
+      const disabled = answered[qid] !== undefined ? ' disabled' : '';
+      return '<button class="opt-btn' + cls + '" id="opt-' + qid + '-' + idx + '"' +
+             disabled + ' onclick="choose(' + qid + ',' + idx + ')">' +
+             '<span class="opt-ltr">' + String.fromCharCode(65 + idx) + '.</span>' +
+             escapeHtml(optText) +
+             '</button>';
+    }).join('');
+
+    const isAnswered = answered[qid] !== undefined;
+    const expOpen = isAnswered ? ' open' : '';
+    const btnLabel = isAnswered ? '💡 Hide Explanation' : '👁 Show Answer & Explanation';
+
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = 'qcard-' + qid;
+    card.style.animationDelay = (i * 0.035) + 's';
+    card.innerHTML =
+      '<div class="q-head">' +
+        '<span class="q-num-badge">Q' + (i + 1) + '</span>' +
+        '<span class="q-tag" style="' + tagStyle + '">' + escapeHtml(q.topic || '') + '</span>' +
+        '<span class="q-yr">WBJECA ' + escapeHtml(q.year || '') + '</span>' +
+      '</div>' +
+      '<div class="q-text">' + escapeHtml(q.q || '') + '</div>' +
+      '<div class="opts-grid">' + optsHtml + '</div>' +
+      '<button class="exp-toggle" id="etbtn-' + qid + '" onclick="toggleExp(' + qid + ')">' +
+        btnLabel +
+      '</button>' +
+      '<div class="exp-box' + expOpen + '" id="exp-' + qid + '">' +
+        '<div class="exp-label">✓ Correct Answer: ' + escapeHtml((q.opts && q.opts[q.ans]) || '') + '</div>' +
+        '<div class="exp-text">' + formatExp(q.exp || '') + '</div>' +
+      '</div>';
+
+    container.appendChild(card);
+  });
+}
+
+/* ════════════════════════════════════════════════════
+   INTERACTIONS
+════════════════════════════════════════════════════ */
+function choose(qid, idx) {
+  // Guard: already answered
+  if (answered[qid] !== undefined) return;
+  const q = allQs[qid];
+  if (!q) return;
+
+  answered[qid] = idx;
+  scDone++;
+  if (idx === q.ans) scOk++;
+  else               scBad++;
+
+  // Apply visual state to all 4 buttons
+  for (var i = 0; i < 4; i++) {
+    var btn = document.getElementById('opt-' + qid + '-' + i);
+    if (!btn) continue;
+    btn.disabled = true;
+    btn.classList.remove('is-correct', 'is-wrong', 'show-ans');
+    if (i === q.ans && i === idx) btn.classList.add('is-correct');
+    else if (i === idx)           btn.classList.add('is-wrong');
+    else if (i === q.ans)         btn.classList.add('show-ans');
+  }
+
+  updateScoreUI(allQs.length);
+
+  // Auto-show explanation after short delay
+  setTimeout(function() {
+    var expBox = document.getElementById('exp-' + qid);
+    var expBtn = document.getElementById('etbtn-' + qid);
+    if (expBox) expBox.classList.add('open');
+    if (expBtn) expBtn.textContent = '💡 Hide Explanation';
+  }, 220);
+}
+
+function toggleExp(qid) {
+  var box = document.getElementById('exp-' + qid);
+  var btn = document.getElementById('etbtn-' + qid);
+  if (!box) return;
+  var isOpen = box.classList.toggle('open');
+  if (btn) btn.textContent = isOpen ? '💡 Hide Explanation' : '👁 Show Answer & Explanation';
+}
+
+// FIX 11: filterTopic uses clean event-listener approach, no inline quoting issues
+function filterTopic(topic, el) {
+  currTopic = topic;
+  document.querySelectorAll('.t-tab').forEach(function(t) { t.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  if (allQs.length > 0) renderQuestions(filterQuestions());
+}
+
+function resetAnswers() {
+  answered = {};
+  scOk = 0; scBad = 0; scDone = 0;
+  updateScoreUI(allQs.length);
+  renderQuestions(filterQuestions());
+}
+
+/* ════════════════════════════════════════════════════
+   SCORE & PROGRESS UI
+════════════════════════════════════════════════════ */
+function updateScoreUI(total) {
+  document.getElementById('sc-ok').textContent   = scOk;
+  document.getElementById('sc-bad').textContent  = scBad;
+  document.getElementById('sc-done').textContent = scDone;
+  // FIX 8: only show total when we have questions
+  var displayTotal = total || allQs.length || 50;
+  document.getElementById('sc-of').textContent = displayTotal;
+  var pct = displayTotal > 0 ? (scDone / displayTotal) * 100 : 0;
+  document.getElementById('sc-bar').style.width  = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+/* ════════════════════════════════════════════════════
+   UTILITY FUNCTIONS
+════════════════════════════════════════════════════ */
+// Prevent XSS from API-generated content
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g,  '&amp;')
+    .replace(/</g,  '&lt;')
+    .replace(/>/g,  '&gt;')
+    .replace(/"/g,  '&quot;')
+    .replace(/'/g,  '&#039;');
+}
+
+// Convert **bold** markers to <strong> tags (applied AFTER escaping)
+function formatExp(text) {
+  // First escape, then convert **..** to <strong>
+  var escaped = escapeHtml(text);
+  return escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+/* ════════════════════════════════════════════════════
+   BUILD HOME GRID
+════════════════════════════════════════════════════ */
+function buildHomeGrid() {
+  var grid = document.getElementById('home-grid');
+  Object.entries(SUBJECTS).forEach(function(entry) {
+    var key = entry[0], s = entry[1];
+    var card = document.createElement('div');
+    card.className = 'subject-card';
+    // FIX 3: use '--c-accent' (matching the ::before CSS var reference)
+    card.style.setProperty('--c-accent', s.accent);
+    card.addEventListener('click', function() { openSubject(key); });
+    card.innerHTML =
+      '<div class="card-emoji">' + s.icon + '</div>' +
+      '<div class="card-name">' + s.name + '</div>' +
+      '<div class="card-desc">' + s.desc + '</div>' +
+      '<div class="card-foot">' +
+        '<span class="card-chip">50 MCQs · ' + s.topics.length + ' Topics</span>' +
+        '<span class="card-go">→</span>' +
+      '</div>';
+    grid.appendChild(card);
+  });
+}
+
+/* ════════════════════════════════════════════════════
+   BUILD SYLLABUS TABLE (ABOUT PAGE)
+════════════════════════════════════════════════════ */
+function buildSylTable() {
+  var tbl = document.getElementById('syl-table');
+  var keys = Object.keys(SUBJECTS);
+  keys.forEach(function(key, i) {
+    var s = SUBJECTS[key];
+    var row = document.createElement('div');
+    row.className = 'syl-row';
+    row.addEventListener('click', function() { openSubject(key); });
+    // FIX 9: correct numbering for 10+ items
+    var num = (i + 1 < 10) ? '0' + (i + 1) : String(i + 1);
+    row.innerHTML =
+      '<span class="syl-n">' + num + '</span>' +
+      '<span class="syl-name">' + s.icon + ' ' + s.name + '</span>' +
+      '<span class="syl-q">50 MCQs →</span>';
+    tbl.appendChild(row);
+  });
+}
+
+/* ════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════ */
+buildHomeGrid();
+buildSylTable();
+</script>
+</body>
+</html>
