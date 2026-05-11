@@ -1041,10 +1041,11 @@ async function generateQuestions() {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        // FIX 12: CRITICAL header required for direct browser API calls
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
+  'Content-Type': 'application/json',
+  'x-api-key': 'AIzaSyBRyU2wT5O8yVKo9MGWrXCnL6qLBpQ-Mps',
+  'anthropic-version': '2023-06-01',
+  'anthropic-dangerous-direct-browser-access': 'true'
+},
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 8000,
